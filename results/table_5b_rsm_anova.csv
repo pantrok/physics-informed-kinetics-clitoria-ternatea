@@ -1,0 +1,5 @@
+Compound,RSM_model_type,term,sum_sq,df,F,PR(>F)
+Phenolics,linear_fallback,T_C,0.0015,1.0,2.1794,0.379
+Phenolics,linear_fallback,ethanol_pct,0.0058,1.0,8.2836,0.2129
+Phenolics,linear_fallback,ratio_val,0.0018,1.0,2.5576,0.3557
+Phenolics,linear_fallback,Residual,0.0007,1.0,,

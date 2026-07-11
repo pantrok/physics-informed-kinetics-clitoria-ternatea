@@ -1,0 +1,5 @@
+Compound,n_valid_curves,RSM_model_type,RSM_R2,RSM_RMSE,RF_R2,RF_RMSE,note
+Anthocyanins,6,none,,,-0.8227,0.0172,Full 2nd-order RSM not estimable: n_valid=6 <= 10 parameters -- falling back to a linear main-effects RSM. Linear fallback also not estimable: n_valid=6 <= 4 parameters.
+Phenolics,7,linear_fallback,0.5448,0.0256,-0.2125,0.0418,Full 2nd-order RSM not estimable: n_valid=7 <= 10 parameters -- falling back to a linear main-effects RSM. 
+Antioxidant Capacity (ABTS),3,none,,,,,Too few valid curves for any meaningful train/test split (n<4)
+Antioxidant Capacity (DPPH),2,none,,,,,Too few valid curves for any meaningful train/test split (n<4)
