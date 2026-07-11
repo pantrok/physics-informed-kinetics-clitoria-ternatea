@@ -12,6 +12,15 @@ feature-importance de absorbancia de la versión anterior del manuscrito (genera
 citarse. Ningún número de este documento reemplaza esos valores porque esos valores ya no forman parte
 del paper.
 
+> ⚠️ **ADVERTENCIA CRÍTICA (posterior a este documento):** el R² de la sección 2 (Tabla 3, split aleatorio
+> por fila) **NO refleja generalización real** — la Tarea 5 (validación agrupada LOCO) demostró que es
+> fuga de información por identidad de condición: bajo una validación que respeta la identidad de cada
+> condición operativa, el R² colapsa a valores negativos en los 4 compuestos. **No citar el R²=0.90-0.94
+> de la Tabla 3 como evidencia de generalización fuera de muestra.** Ver
+> [RESULTADOS_validacion_agrupada.md](RESULTADOS_validacion_agrupada.md) (veredicto: "fuga confirmada /
+> no generaliza") y [RESULTADOS_sigma_y_fisica.md](RESULTADOS_sigma_y_fisica.md) (σ y ablación de la
+> física, ambos bajo el mismo diagnóstico) para las cifras correctas a citar en su lugar.
+
 ---
 
 ## 1. Conteo de curvas cinéticas válidas (filtro físico R²≥0.50)
