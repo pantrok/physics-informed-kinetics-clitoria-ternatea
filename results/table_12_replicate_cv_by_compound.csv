@@ -1,0 +1,6 @@
+Compound,n_obs,A_mean_min,A_mean_max,CV_median_pct,CV_mean_pct,CV_P25_pct,CV_P75_pct,CV_of_mean_of_3_median_pct,CV_of_mean_of_3_mean_pct
+Anthocyanins,163,0.006,0.06,26.75,29.708,16.667,38.293,15.444,17.152
+Phenolics,164,0.055,1.322,7.6,8.988,4.342,11.792,4.388,5.189
+Antioxidant Capacity (ABTS),165,0.48,1.033,3.486,5.077,1.96,6.059,2.013,2.931
+Antioxidant Capacity (DPPH),154,0.104,0.458,12.392,14.332,7.59,18.997,7.154,8.275
+ALL (global),646,,,9.889,14.491,4.126,19.401,5.709,8.367
