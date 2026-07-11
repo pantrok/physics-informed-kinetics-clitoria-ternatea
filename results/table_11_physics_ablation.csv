@@ -1,0 +1,5 @@
+Compound,R2_physics_informed_LOCO,R2_naive_LOCO,RMSE_physics,RMSE_naive,delta_R2
+Anthocyanins,-0.5799,-0.6052,0.0316,0.0302,0.0253
+Phenolics,-0.4226,0.0411,0.065,0.0559,-0.4636
+Antioxidant Capacity (ABTS),-1.0544,-0.9795,0.0389,0.0352,-0.0749
+Antioxidant Capacity (DPPH),-2.8248,-2.9486,0.1847,0.2762,0.1238
