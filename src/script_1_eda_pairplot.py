@@ -56,3 +56,10 @@ def generate_eda_pairplot(data_path: str, output_dir: str) -> None:
 
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'fig_2_pairplot_eda.png')
+    g.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.close(g.fig)
+    print(f"EDA pairplot generated at: {output_path}")
+
+
+if __name__ == "__main__":
+    generate_eda_pairplot(os.path.join('..', 'data', 'dataset.csv'), os.path.join('..', 'figures'))
