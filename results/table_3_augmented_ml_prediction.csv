@@ -1,0 +1,5 @@
+Compound,Random Forest (Augmented) R2,Random Forest (Augmented) RMSE
+Anthocyanins,0.944,0.005
+Phenolics,0.903,0.017
+Antioxidant Capacity (ABTS),0.914,0.007
+Antioxidant Capacity (DPPH),0.402,0.049
