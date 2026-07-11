@@ -1,0 +1,19 @@
+Compound,id_cinetica,T_C,disolvente,relacion,n_attempted,n_accepted,n_rejected,rejection_rate
+Anthocyanins,1,60.0,Agua75_ETA25,1_30,30,30,0,0.0
+Anthocyanins,7,60.0,Agua100,1_20,30,26,4,0.1333
+Anthocyanins,8,75.0,Agua100,1_20,30,28,2,0.0667
+Anthocyanins,11,67.5,Agua100,1_30,30,30,0,0.0
+Anthocyanins,12,67.5,Agua100,1_10,30,21,9,0.3
+Anthocyanins,15,67.5,Agua75_ETA25,1_20,30,30,0,0.0
+Phenolics,3,60.0,Agua75_ETA25,1_10,30,28,2,0.0667
+Phenolics,4,75.0,Agua75_ETA25,1_10,30,19,11,0.3667
+Phenolics,7,60.0,Agua100,1_20,30,23,7,0.2333
+Phenolics,11,67.5,Agua100,1_30,30,30,0,0.0
+Phenolics,12,67.5,Agua100,1_10,30,30,0,0.0
+Phenolics,13,67.5,Agua75_ETA25,1_20,30,27,3,0.1
+Phenolics,15,67.5,Agua75_ETA25,1_20,30,25,5,0.1667
+Antioxidant Capacity (ABTS),7,60.0,Agua100,1_20,30,28,2,0.0667
+Antioxidant Capacity (ABTS),11,67.5,Agua100,1_30,30,30,0,0.0
+Antioxidant Capacity (ABTS),12,67.5,Agua100,1_10,30,28,2,0.0667
+Antioxidant Capacity (DPPH),4,75.0,Agua75_ETA25,1_10,30,30,0,0.0
+Antioxidant Capacity (DPPH),6,75.0,Agua50_ETA50,1_20,30,13,17,0.5667
