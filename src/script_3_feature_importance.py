@@ -24,10 +24,10 @@ def generate_feature_importance_plot(data_path: str, output_dir: str) -> None:
             df[col] = df[col].astype(str).str.strip()
 
     comp, target = 'Antocianinas', 'conc_promedio'
-    numeric_features = ['A_band1', 'A_band2', 'A_band3', 'T_C', 'tiempo_min']
+    numeric_features = ['A_replicate_1', 'A_replicate_2', 'A_replicate_3', 'T_C', 'tiempo_min']
     cat_features = ['disolvente', 'relacion']
 
-    mask_valid = (df['compuesto'] == comp) & df[target].notna() & df['A_band1'].notna()
+    mask_valid = (df['compuesto'] == comp) & df[target].notna() & df['A_replicate_1'].notna()
     sub = df[mask_valid].copy()
 
     X, y = sub[numeric_features + cat_features], sub[target]
@@ -51,7 +51,7 @@ def generate_feature_importance_plot(data_path: str, output_dir: str) -> None:
     imp_df = pd.DataFrame({'Descriptor': all_features, 'Importancia': importances})
 
     rename_map = {
-        'A_band1': 'Abs 1', 'A_band2': 'Abs 2', 'A_band3': 'Abs 3',
+        'A_replicate_1': 'Abs 1', 'A_replicate_2': 'Abs 2', 'A_replicate_3': 'Abs 3',
         'T_C': 'Temperature (°C)', 'tiempo_min': 'Time (min)',
         'disolvente_Agua100': 'Solvent: Water (100%)',
         'disolvente_Agua50_ETA50': 'Solvent: Water/EtOH (50:50)',

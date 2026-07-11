@@ -34,12 +34,12 @@ def generate_full_ablation_study(data_path: str, output_dir: str) -> None:
         'Flavonoides (DPPH)': 'Antioxidant Capacity (DPPH)'
     }
 
-    numeric_features = ['A_band1', 'A_band2', 'A_band3', 'T_C', 'tiempo_min']
+    numeric_features = ['A_replicate_1', 'A_replicate_2', 'A_replicate_3', 'T_C', 'tiempo_min']
     cat_features = ['disolvente', 'relacion']
     results = []
 
     for comp_es, comp_en in targets_map.items():
-        mask = (df['compuesto'] == comp_es) & df['conc_promedio'].notna() & df['A_band1'].notna()
+        mask = (df['compuesto'] == comp_es) & df['conc_promedio'].notna() & df['A_replicate_1'].notna()
         sub = df[mask].copy()
         if len(sub) < 10: continue
             

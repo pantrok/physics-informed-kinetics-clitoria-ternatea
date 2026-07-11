@@ -21,7 +21,7 @@ def generate_eda_pairplot(data_path: str, output_dir: str) -> None:
         if col in df.columns:
             df[col] = df[col].astype(str).str.strip()
 
-    required_columns = ['A_band1', 'A_band2', 'A_band3', 'T_C', 'tiempo_min', 'conc_promedio']
+    required_columns = ['A_replicate_1', 'A_replicate_2', 'A_replicate_3', 'T_C', 'tiempo_min', 'conc_promedio']
     df_clean = df.dropna(subset=required_columns).copy()
     df_clean = df_clean[df_clean['compuesto'] != '']
 
@@ -36,9 +36,9 @@ def generate_eda_pairplot(data_path: str, output_dir: str) -> None:
     feature_mapping = {
         'T_C': 'Temperature (°C)',
         'tiempo_min': 'Time (min)',
-        'A_band1': 'Abs 1',
-        'A_band2': 'Abs 2',
-        'A_band3': 'Abs 3',
+        'A_replicate_1': 'Abs 1',
+        'A_replicate_2': 'Abs 2',
+        'A_replicate_3': 'Abs 3',
         'conc_promedio': 'Target Value'
     }
     

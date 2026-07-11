@@ -40,7 +40,7 @@ def generate_inference_metrics_and_plots(data_path: str, output_dir: str) -> Non
         'Flavonoides (DPPH)': 'Antioxidant Capacity (DPPH)'
     }
 
-    numeric_features = ['A_band1', 'A_band2', 'A_band3', 'T_C', 'tiempo_min']
+    numeric_features = ['A_replicate_1', 'A_replicate_2', 'A_replicate_3', 'T_C', 'tiempo_min']
     cat_features = ['disolvente', 'relacion']
 
     results_table = []
@@ -50,7 +50,7 @@ def generate_inference_metrics_and_plots(data_path: str, output_dir: str) -> Non
     # Iterar sobre todos los compuestos para generar la Tabla 1
     for comp_es, comp_en in targets_map.items():
         mask_valid = (df['compuesto'] == comp_es) & df['conc_promedio'].notna() & \
-                     df['A_band1'].notna() & df['A_band2'].notna() & df['A_band3'].notna()
+                     df['A_replicate_1'].notna() & df['A_replicate_2'].notna() & df['A_replicate_3'].notna()
         sub = df[mask_valid].copy()
         
         if len(sub) < 10: continue
@@ -68,13 +68,13 @@ def generate_inference_metrics_and_plots(data_path: str, output_dir: str) -> Non
         groups_train = sub.loc[train_mask, 'id_cinetica']
 
         # --- Model 1: Beer-Lambert ---
-        corr = sub[['A_band1', 'A_band2', 'A_band3', 'conc_promedio']].corr()['conc_promedio'].drop('conc_promedio')
+        corr = sub[['A_replicate_1', 'A_replicate_2', 'A_replicate_3', 'conc_promedio']].corr()['conc_promedio'].drop('conc_promedio')
         best_band = corr.abs().idxmax()
         bl = LinearRegression().fit(sub.loc[train_mask, [best_band]], y_train)
         bl_pred = bl.predict(sub.loc[test_mask, [best_band]])
 
         # --- Model 2: PLS ---
-        X_train_num, X_test_num = sub.loc[train_mask, ['A_band1', 'A_band2', 'A_band3']].values, sub.loc[test_mask, ['A_band1', 'A_band2', 'A_band3']].values
+        X_train_num, X_test_num = sub.loc[train_mask, ['A_replicate_1', 'A_replicate_2', 'A_replicate_3']].values, sub.loc[test_mask, ['A_replicate_1', 'A_replicate_2', 'A_replicate_3']].values
         pls = Pipeline([('scaler', StandardScaler()), ('pls', PLSRegression(n_components=min(3, X_train_num.shape[0]-1, X_train_num.shape[1])))])
         pls.fit(X_train_num, y_train)
         pls_pred = np.ravel(pls.predict(X_test_num))

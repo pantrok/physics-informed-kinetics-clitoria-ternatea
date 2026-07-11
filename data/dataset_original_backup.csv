@@ -1,4 +1,4 @@
-id_registro,flor,id_cinetica,compuesto,T_C,relacion,disolvente,tiempo_min,A_replicate_1,A_replicate_2,A_replicate_3,conc_replicate_1,conc_replicate_2,conc_replicate_3,conc_promedio,metrica_conc
+id_registro,flor,id_cinetica,compuesto,T_C,relacion,disolvente,tiempo_min,A_band1,A_band2,A_band3,conc_band1,conc_band2,conc_band3,conc_promedio,metrica_conc
 1,Clitoria_ternatea,1,Antocianinas ,60,1_30,Agua75_ETA25,15,0.002,0.008,0.004,0.333680297,1.33472119,0.667360595,0.778587361,mg/L
 2,Clitoria_ternatea,1,Antocianinas ,60,1_30,Agua75_ETA25,30,0.009,0.014,0.014,1.501561338,2.335762082,2.335762082,2.057695167,mg/L
 3,Clitoria_ternatea,1,Antocianinas ,60,1_30,Agua75_ETA25,60,0.015,0.01,0.015,2.50260223,1.668401487,2.50260223,2.224535316,mg/L

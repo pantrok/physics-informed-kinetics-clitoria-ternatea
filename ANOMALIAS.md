@@ -5,6 +5,21 @@ la ejecución de las Tareas 1-4 del refuerzo analítico. Son material legítimo 
 
 ---
 
+## 0. Nota de redacción — terminología "banda" (addendum Tarea 6, §1)
+
+Las columnas `A_band1/2/3` / `conc_band1/2/3` del dataset original **no son bandas espectrales ni longitudes
+de onda distintas**: son **tres réplicas de medición de absorbancia** de la misma muestra (triplicado
+instrumental, para capturar ruido de medición). Se renombraron a `A_replicate_1/2/3` / `conc_replicate_1/2/3`
+(commit `refactor: renombrar A_band*/conc_band* a *_replicate_*`); el archivo original con los nombres viejos
+se conserva en `data/dataset_original_backup.csv`.
+
+**Verificar en el texto del manuscrito** que no se describan "tres bandas" ni "tres longitudes de onda" — el
+diseño correcto a describir en Métodos es "triplicado de medición de absorbancia por instancia". Ver
+`results/table_12_replicate_cv_by_compound.csv` y `RESULTADOS_sigma_y_fisica.md` para la cuantificación del
+ruido de este triplicado (CV por compuesto).
+
+---
+
 ## 1. DPPH sigue sin datos suficientes para el mapeo ML (confirmado, límite conocido)
 
 Solo **2 curvas cinéticas** de Flavonoides (DPPH) superan el filtro físico R²≥0.50 (`table_2_phenomenological_fit.csv`),
