@@ -1,0 +1,5 @@
+Compound,n_grupos,R2_random_Table3,R2_grouped_LOCO,RMSE_grouped,delta_R2,note
+Anthocyanins,6,0.9442,-0.5799,0.0316,-1.5241,
+Phenolics,7,0.9035,-0.4226,0.065,-1.326,
+Antioxidant Capacity (ABTS),3,0.9141,-1.0544,0.0389,-1.9685,"No concluyente (n_grupos<4, ejecutado por completitud)"
+Antioxidant Capacity (DPPH),2,0.4024,-2.8248,0.1847,-3.2271,"No concluyente (n_grupos<4, ejecutado por completitud)"

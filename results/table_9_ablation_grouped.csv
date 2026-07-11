@@ -1,0 +1,21 @@
+Compound,n_synth_per_curve,augmented_dataset_size,R2_grouped_LOCO,RMSE_grouped
+Anthocyanins,0,6,-0.6809,0.0307
+Anthocyanins,10,65,-0.6273,0.0339
+Anthocyanins,30,171,-0.5799,0.0316
+Anthocyanins,60,352,-0.5407,0.033
+Anthocyanins,90,524,-0.5563,0.0315
+Phenolics,0,7,-0.0647,0.0584
+Phenolics,10,69,-0.048,0.059
+Phenolics,30,189,-0.4226,0.065
+Phenolics,60,365,-0.3382,0.0654
+Phenolics,90,560,-0.176,0.0612
+Antioxidant Capacity (ABTS),0,3,-1.0113,0.035
+Antioxidant Capacity (ABTS),10,31,-1.1854,0.0429
+Antioxidant Capacity (ABTS),30,89,-1.0544,0.0389
+Antioxidant Capacity (ABTS),60,180,-1.1651,0.0423
+Antioxidant Capacity (ABTS),90,264,-0.8006,0.0355
+Antioxidant Capacity (DPPH),0,2,-3.0,0.2783
+Antioxidant Capacity (DPPH),10,16,-2.8765,0.1749
+Antioxidant Capacity (DPPH),30,45,-2.8248,0.1847
+Antioxidant Capacity (DPPH),60,83,-3.5451,0.1722
+Antioxidant Capacity (DPPH),90,131,-2.7427,0.176
