@@ -1,0 +1,5 @@
+Compound,n_conditions,R2_in_condition_random_split,R2_out_of_condition_grouped,RMSE_out_of_condition_grouped,delta_R2,R2_baseline_global_mean,R2_baseline_nearest_condition,note
+Anthocyanins,6,0.9442,-0.5799,0.0316,-1.5241,-0.4078,-0.7682,
+Phenolics,7,0.9035,-0.4226,0.065,-1.326,-0.28,-0.0192,
+Antioxidant Capacity (ABTS),3,0.9141,-1.0544,0.0389,-1.9685,-1.0792,-1.382,Not conclusive (n<4 conditions); included for completeness
+Antioxidant Capacity (DPPH),2,0.4024,-2.8248,0.1847,-3.2271,-2.8785,-2.8785,Not conclusive (n<4 conditions); included for completeness
