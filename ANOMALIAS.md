@@ -18,6 +18,22 @@ diseño correcto a describir en Métodos es "triplicado de medición de absorban
 `results/table_12_replicate_cv_by_compound.csv` y `RESULTADOS_sigma_y_fisica.md` para la cuantificación del
 ruido de este triplicado (CV por compuesto).
 
+## 6. DPPH se vuelve positivo al quitar el filtro físico (addendum Tarea 7, §2) — no forzar una narrativa única
+
+La validación agrupada sin el filtro R²≥0.50 (`results/paper_table_supp_nofilter.csv`) confirma lo
+esperado para 3 de 4 compuestos (quitar el filtro empeora o deja igual de negativo el R² agrupado:
+Anthocyanins -0.580→-1.736, ABTS -1.054→-2.286, Phenolics -0.423→-0.079). **DPPH es la excepción:**
+pasa de R²=-2.825 (2 curvas, con filtro) a R²=+0.554 (15 curvas, sin filtro) — el único resultado
+positivo de toda la validación agrupada del proyecto.
+
+**No se interpreta esto como "el filtro perjudicaba a DPPH"** — el salto de 2 a 15 curvas es un cambio
+de tamaño de muestra mucho mayor que en los otros 3 compuestos (que solo ganan curvas adicionales de
+peor ajuste fenomenológico, sin cambiar tan drásticamente el nº de grupos LOCO). Es más consistente con
+"con solo 2 grupos, cualquier LOCO es extremadamente ruidoso e inestable" que con una conclusión sobre
+la utilidad del filtro físico. Se registra tal cual, sin forzar una narrativa que lo generalice a los
+otros compuestos ni que lo descarte como ruido — es una observación puntual y honesta a mencionar en la
+Discusión si se habla de DPPH específicamente.
+
 ---
 
 ## 1. DPPH sigue sin datos suficientes para el mapeo ML (confirmado, límite conocido)
