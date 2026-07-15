@@ -1,5 +1,10 @@
 # RESULTADOS_para_manuscrito.md — Índice final para la fase de redacción
 
+> ⚠️ **Numeración de figuras superada.** Tras la respuesta a revisión (addendum Tarea 9), la figura de EDA
+> salió del manuscrito y el resto se renumeró (Fig.1-7). Ver [RESULTADOS_revision.md](RESULTADOS_revision.md)
+> §6 para el esquema vigente y [figures/FORMAT_check.md](figures/FORMAT_check.md) para los archivos
+> actuales. Los números clave de este documento (framing, hallazgo central) siguen vigentes.
+
 Consolida figuras, tablas y números clave, con terminología limpia de paper, listos para escribir el
 manuscrito. No redacta secciones del texto — eso se trabaja con el autor, turno a turno.
 
