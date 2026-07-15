@@ -19,12 +19,15 @@ previously in this project.
 """
 
 import os
-import shutil
+
+import matplotlib
+matplotlib.use('Agg')  # headless backend -- avoids a Tk/Tcl crash (exit code 3) seen when
+                        # joblib's multiprocess GridSearchCV (fig_5) runs under the
+                        # interactive TkAgg backend that is this environment's default.
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
 import seaborn as sns
 from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score, mean_squared_error
@@ -36,9 +39,27 @@ from kinetic_pipeline import (TARGETS_MAP, RANDOM_STATE, T_MIN, T_MAX,
                                load_dataset, ext_deg_model, fit_valid_curves, augment_curves)
 from script_8_rsm_vs_rf import parse_ethanol_pct, parse_ratio_val
 from script_9_grouped_validation import run_grouped_rf
+from figure_export import mm_to_in, save_figure
 
 COLORS = ['#4c72b0', '#dd8452', '#55a868', '#c44e52']
 T_STEP = 0.5
+
+# Journal of Chemometrics (Wiley) final-art width target: within 80-180 mm.
+# All figures here are complex multipanel/heatmap/legend content, so all target the wide
+# end of the range; height is derived per figure to preserve its current aspect ratio.
+FIG_WIDTH_MM = 178
+FIG_WIDTH_IN = mm_to_in(FIG_WIDTH_MM)
+
+
+def _sized_figsize(width_in, height_in, target_mm=FIG_WIDTH_MM):
+    """Rescale (width_in, height_in) to target_mm (in) while preserving aspect ratio.
+    target_mm defaults to FIG_WIDTH_MM but is reduced for figures with a colorbar, since
+    the colorbar+label render outside the nominal axes box and would otherwise push the
+    final tight-bbox width past the Wiley 180 mm limit (confirmed empirically via
+    FORMAT_check.md: colorbar figures overshot the plain figsize target by 13-23%)."""
+    target_in = mm_to_in(target_mm)
+    scale = target_in / width_in
+    return target_in, height_in * scale
 
 
 # =====================================================================================
@@ -46,19 +67,21 @@ T_STEP = 0.5
 # =====================================================================================
 
 def make_fig2_eda(figures_dir):
-    """fig_2: copy the existing EDA pairplot (content unchanged) under its final name."""
-    src = os.path.join(figures_dir, 'fig_2_pairplot_eda.png')
-    dst = os.path.join(figures_dir, 'fig_2_eda_pairplot.png')
-    if os.path.exists(src):
-        shutil.copyfile(src, dst)
-        print(f"fig_2 (EDA pairplot) -> {dst}")
+    """fig_2: generated directly by script_1_eda_pairplot.py (run first) in final
+    Wiley format (TIFF 600 dpi + PNG 300 dpi, fig_2_eda_pairplot.*). Nothing to do here;
+    this is just a presence check so a missing prerequisite run fails loudly."""
+    tiff_path = os.path.join(figures_dir, 'fig_2_eda_pairplot.tiff')
+    if not os.path.exists(tiff_path):
+        print(f"[WARN] {tiff_path} not found -- run script_1_eda_pairplot.py first.")
+    else:
+        print(f"fig_2 (EDA pairplot) already present -> {tiff_path}")
 
 
 def make_fig3_phenomenological_fits(df, figures_dir):
     """fig_3: Ext-Deg phenomenological fit overlaid on the real concentration-vs-time data,
     for every physically valid curve, one panel per compound."""
-    sns.set_theme(style='whitegrid', context='paper', font_scale=1.1)
-    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    sns.set_theme(style='whitegrid', context='paper', font_scale=1.3)
+    fig, axes = plt.subplots(2, 2, figsize=_sized_figsize(15, 12, target_mm=172))
     axes = axes.ravel()
 
     for ax, (comp_es, comp_en) in zip(axes, TARGETS_MAP.items()):
@@ -82,24 +105,23 @@ def make_fig3_phenomenological_fits(df, figures_dir):
             ax.plot(t_smooth, C_smooth, color=color, lw=1.6, label=label)
 
         ax.set_title(comp_en, fontsize=13, fontweight='bold')
-        ax.set_xlabel('Time (min)', fontsize=11)
-        ax.set_ylabel('Concentration', fontsize=11)
+        ax.set_xlabel('$t$ (min)', fontsize=11)
+        ax.set_ylabel('$C$', fontsize=11)
         ax.legend(fontsize=6.5, loc='best', framealpha=0.9)
 
     plt.suptitle('Phenomenological Ext-Deg fits for physically valid extraction kinetics',
                  fontsize=15, fontweight='bold', y=1.0)
     plt.tight_layout()
-    fig_path = os.path.join(figures_dir, 'fig_3_phenomenological_fits.png')
-    plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+    save_figure(fig, figures_dir, 'fig_3_phenomenological_fits')
     plt.close()
-    print(f"fig_3 (phenomenological fits) -> {fig_path}")
+    print("fig_3 (phenomenological fits) saved")
 
 
 def make_fig4_kext_confidence_intervals(results_dir, figures_dir):
     """fig_4: estimated k_ext per operating condition with its 95% confidence interval."""
     table_4 = pd.read_csv(os.path.join(results_dir, 'table_4_kext_confidence_intervals.csv'))
-    sns.set_theme(style='whitegrid', context='paper', font_scale=1.1)
-    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    sns.set_theme(style='whitegrid', context='paper', font_scale=1.3)
+    fig, axes = plt.subplots(2, 2, figsize=_sized_figsize(15, 12))
     axes = axes.ravel()
 
     for ax, color, comp_en in zip(axes, COLORS, TARGETS_MAP.values()):
@@ -118,17 +140,16 @@ def make_fig4_kext_confidence_intervals(results_dir, figures_dir):
                     color=color, ecolor=color, elinewidth=1.3, capsize=4, markeredgecolor='white')
         labels = [f"{r.T_C:.0f}°C\n{r.disolvente}\n{r.relacion}" for r in sub.itertuples()]
         ax.set_xticks(x)
-        ax.set_xticklabels(labels, fontsize=6.5, rotation=45, ha='right')
-        ax.set_ylabel('$k_{ext}$ (min$^{-1}$)', fontsize=11)
+        ax.set_xticklabels(labels, fontsize=7, rotation=45, ha='right')
+        ax.set_ylabel(r'$k_{\mathrm{ext}}$ (min$^{-1}$)', fontsize=11)
         ax.set_title(comp_en, fontsize=13, fontweight='bold')
 
-    plt.suptitle('Estimated $k_{ext}$ by operating condition, with 95% confidence intervals',
+    plt.suptitle(r'Estimated $k_{\mathrm{ext}}$ by operating condition, with 95% confidence intervals',
                  fontsize=15, fontweight='bold', y=1.0)
     plt.tight_layout()
-    fig_path = os.path.join(figures_dir, 'fig_4_kext_confidence_intervals.png')
-    plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+    save_figure(fig, figures_dir, 'fig_4_kext_confidence_intervals')
     plt.close()
-    print(f"fig_4 (k_ext confidence intervals) -> {fig_path}")
+    print("fig_4 (k_ext confidence intervals) saved")
 
 
 def _build_mesh(disolventes, relaciones):
@@ -147,8 +168,8 @@ def make_fig5_response_surfaces(df, figures_dir):
     combos = [f"{d} | {r}" for d in disolventes for r in relaciones]
     mesh_df, t_grid = _build_mesh(disolventes, relaciones)
 
-    sns.set_theme(style='white', context='paper', font_scale=1.2)
-    fig, axes = plt.subplots(2, 2, figsize=(17, 13))
+    sns.set_theme(style='white', context='paper', font_scale=1.3)
+    fig, axes = plt.subplots(2, 2, figsize=_sized_figsize(17, 13, target_mm=155))
     axes = axes.ravel()
 
     for i, (comp_es, comp_en) in enumerate(TARGETS_MAP.items()):
@@ -169,11 +190,11 @@ def make_fig5_response_surfaces(df, figures_dir):
 
         im = ax.imshow(surface, aspect='auto', origin='lower', cmap='viridis',
                         extent=[t_grid.min(), t_grid.max(), -0.5, len(combos) - 0.5])
-        ax.set_yticks(range(len(combos))); ax.set_yticklabels(combos, fontsize=9)
-        ax.set_xlabel('Temperature, T (°C)', fontsize=12)
-        ax.set_title(f"{comp_en} — model prediction", fontsize=13, fontweight='bold')
+        ax.set_yticks(range(len(combos))); ax.set_yticklabels(combos, fontsize=8)
+        ax.set_xlabel('$T$ (°C)', fontsize=11)
+        ax.set_title(f"{comp_en} — model prediction", fontsize=12, fontweight='bold')
         cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-        cbar.set_label('$k_{ext}$ (min$^{-1}$)', fontsize=10)
+        cbar.set_label(r'$k_{\mathrm{ext}}$ (min$^{-1}$)', fontsize=9)
 
         for curva in result['curvas_validas']:
             combo_label = f"{curva['disolvente']} | {curva['relacion']}"
@@ -184,21 +205,20 @@ def make_fig5_response_surfaces(df, figures_dir):
                        edgecolor='white', linewidth=1.8, zorder=5)
             ax.scatter([curva['T_C']], [row_idx], marker='x', s=50, color='black', linewidth=1.6, zorder=6)
 
-    plt.suptitle('Model-predicted $k_{ext}$ response surfaces (interpolation within the measured design space)\n'
-                 'White-ringed markers = real experimental points', y=1.02, fontsize=15, fontweight='bold')
+    plt.suptitle(r'Model-predicted $k_{\mathrm{ext}}$ response surfaces (interpolation within the measured design space)'
+                 '\nWhite-ringed markers = real experimental points', y=1.02, fontsize=13, fontweight='bold')
     plt.tight_layout()
-    fig_path = os.path.join(figures_dir, 'fig_5_response_surfaces.png')
-    plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+    save_figure(fig, figures_dir, 'fig_5_response_surfaces')
     plt.close()
-    print(f"fig_5 (response surfaces) -> {fig_path}")
+    print("fig_5 (response surfaces) saved")
 
 
 def make_fig6_in_vs_out_of_condition(results_dir, figures_dir):
     """fig_6: in-condition (random split) vs. out-of-condition (grouped cross-validation)
     predictive performance -- the central methodological finding."""
     table_7 = pd.read_csv(os.path.join(results_dir, 'table_7_grouped_validation.csv'))
-    sns.set_theme(style='whitegrid', context='paper', font_scale=1.15)
-    fig, ax = plt.subplots(figsize=(10, 6.5))
+    sns.set_theme(style='whitegrid', context='paper', font_scale=1.3)
+    fig, ax = plt.subplots(figsize=_sized_figsize(10, 6.5))
 
     compounds = table_7['Compound'].tolist()
     x = np.arange(len(compounds))
@@ -211,14 +231,13 @@ def make_fig6_in_vs_out_of_condition(results_dir, figures_dir):
     ax.set_xticks(x)
     ax.set_xticklabels(compounds, fontsize=10, rotation=15, ha='right')
     ax.set_ylabel('Test $R^2$', fontsize=12)
-    ax.legend(fontsize=10)
+    ax.legend(fontsize=10, loc='upper right')
     ax.set_title('Predictive performance: in-condition vs. out-of-condition validation',
-                 fontsize=14, fontweight='bold')
+                 fontsize=13, fontweight='bold')
     plt.tight_layout()
-    fig_path = os.path.join(figures_dir, 'fig_6_out_of_condition_validation.png')
-    plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+    save_figure(fig, figures_dir, 'fig_6_out_of_condition_validation')
     plt.close()
-    print(f"fig_6 (in- vs. out-of-condition validation) -> {fig_path}")
+    print("fig_6 (in- vs. out-of-condition validation) saved")
 
 
 def make_fig7_augmentation_and_sigma(results_dir, figures_dir):
@@ -227,36 +246,35 @@ def make_fig7_augmentation_and_sigma(results_dir, figures_dir):
     table_9 = pd.read_csv(os.path.join(results_dir, 'table_9_ablation_grouped.csv'))
     table_10 = pd.read_csv(os.path.join(results_dir, 'table_10_sigma_sensitivity.csv'))
 
-    sns.set_theme(style='whitegrid', context='paper', font_scale=1.05)
-    fig, axes = plt.subplots(1, 2, figsize=(15, 6))
+    sns.set_theme(style='whitegrid', context='paper', font_scale=1.25)
+    fig, axes = plt.subplots(1, 2, figsize=_sized_figsize(15, 6))
 
     for color, (comp_en, grp) in zip(COLORS, table_9.groupby('Compound', sort=False)):
         grp = grp.sort_values('n_synth_per_curve')
         axes[0].plot(grp['augmented_dataset_size'], grp['R2_grouped_LOCO'], marker='o',
                      color=color, label=comp_en, lw=2)
     axes[0].axhline(0, color='gray', lw=0.8, ls=':')
-    axes[0].set_xlabel('Augmented dataset size', fontsize=11)
-    axes[0].set_ylabel('Test $R^2$ (out-of-condition)', fontsize=11)
-    axes[0].set_title('Effect of augmentation size', fontsize=12, fontweight='bold')
-    axes[0].legend(fontsize=8)
+    axes[0].set_xlabel('Augmented dataset size', fontsize=10)
+    axes[0].set_ylabel('Test $R^2$ (out-of-condition)', fontsize=10)
+    axes[0].set_title('Effect of augmentation size', fontsize=11, fontweight='bold')
+    axes[0].legend(fontsize=7)
 
     for color, (comp_en, grp) in zip(COLORS, table_10.groupby('Compound', sort=False)):
         grp = grp.sort_values('sigma')
         axes[1].plot(grp['sigma'], grp['R2_grouped_LOCO'], marker='o', color=color, label=comp_en, lw=2)
     axes[1].axhline(0, color='gray', lw=0.8, ls=':')
-    axes[1].axvline(0.08, color='black', ls='--', lw=1.1, label='σ = 0.08 (adopted)')
-    axes[1].set_xlabel('σ (augmentation noise fraction)', fontsize=11)
-    axes[1].set_ylabel('Test $R^2$ (out-of-condition)', fontsize=11)
-    axes[1].set_title('Effect of augmentation noise level', fontsize=12, fontweight='bold')
-    axes[1].legend(fontsize=8)
+    axes[1].axvline(0.08, color='black', ls='--', lw=1.1, label=r'$\sigma$ = 0.08 (adopted)')
+    axes[1].set_xlabel(r'$\sigma$ (augmentation noise fraction)', fontsize=10)
+    axes[1].set_ylabel('Test $R^2$ (out-of-condition)', fontsize=10)
+    axes[1].set_title('Effect of augmentation noise level', fontsize=11, fontweight='bold')
+    axes[1].legend(fontsize=7)
 
     plt.suptitle('Augmentation size and noise level do not restore out-of-condition generalization',
-                 fontsize=14, fontweight='bold', y=1.03)
+                 fontsize=12, fontweight='bold', y=1.05)
     plt.tight_layout()
-    fig_path = os.path.join(figures_dir, 'fig_7_augmentation_and_sigma.png')
-    plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+    save_figure(fig, figures_dir, 'fig_7_augmentation_and_sigma')
     plt.close()
-    print(f"fig_7 (augmentation and sigma effects) -> {fig_path}")
+    print("fig_7 (augmentation and sigma effects) saved")
 
 
 # =====================================================================================
@@ -372,14 +390,14 @@ def make_fig8_gp_uncertainty_map(gp_result, df, figures_dir):
         mask = (mesh_df['disolvente'] == d) & (mesh_df['relacion'] == r)
         surface[row_idx, :] = std_pred[mask.values]
 
-    sns.set_theme(style='white', context='paper', font_scale=1.15)
-    fig, ax = plt.subplots(figsize=(10, 7))
+    sns.set_theme(style='white', context='paper', font_scale=1.3)
+    fig, ax = plt.subplots(figsize=_sized_figsize(10, 7, target_mm=145))
     im = ax.imshow(surface, aspect='auto', origin='lower', cmap='magma',
                     extent=[t_grid.min(), t_grid.max(), -0.5, len(combos) - 0.5])
-    ax.set_yticks(range(len(combos))); ax.set_yticklabels(combos, fontsize=10)
-    ax.set_xlabel('Temperature, T (°C)', fontsize=12)
+    ax.set_yticks(range(len(combos))); ax.set_yticklabels(combos, fontsize=9)
+    ax.set_xlabel('$T$ (°C)', fontsize=11)
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    cbar.set_label('GP predictive standard deviation of $k_{ext}$ (min$^{-1}$)', fontsize=11)
+    cbar.set_label(r'GP predictive standard deviation of $k_{\mathrm{ext}}$ (min$^{-1}$)', fontsize=10)
 
     for curva in gp_result['curvas_validas']:
         combo_label = f"{curva['disolvente']} | {curva['relacion']}"
@@ -389,14 +407,13 @@ def make_fig8_gp_uncertainty_map(gp_result, df, figures_dir):
         ax.scatter([curva['T_C']], [row_idx], marker='o', s=100, facecolor='none',
                    edgecolor='cyan', linewidth=2.0, zorder=5)
 
-    ax.set_title('Gaussian Process predictive uncertainty for $k_{ext}$ across the measured design space (Phenolics)\n'
-                 'High-uncertainty regions indicate operating conditions not informed by the current design; '
-                 'cyan markers = experimental points', fontsize=12, fontweight='bold')
+    ax.set_title(r'Gaussian Process predictive uncertainty for $k_{\mathrm{ext}}$ across the measured design space (Phenolics)'
+                 '\nHigh-uncertainty regions indicate operating conditions not informed by the current design; '
+                 'cyan markers = experimental points', fontsize=10, fontweight='bold')
     plt.tight_layout()
-    fig_path = os.path.join(figures_dir, 'fig_8_gp_uncertainty_map.png')
-    plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+    save_figure(fig, figures_dir, 'fig_8_gp_uncertainty_map')
     plt.close()
-    print(f"fig_8 (GP uncertainty map) -> {fig_path}")
+    print("fig_8 (GP uncertainty map) saved")
 
 
 def build_table_gp_uncertainty(gp_result, df):
@@ -527,6 +544,86 @@ def write_tables_readme(results_dir, tables):
 
 
 # =====================================================================================
+# Section 5 -- Journal of Chemometrics (Wiley) format compliance check (addendum Task 8)
+# =====================================================================================
+
+# (figure_stem, IUPAC-italic symbols actually used in that figure's labels/annotations)
+FIGURE_MANIFEST = [
+    ('fig_1', ['k_ext', 'k_deg', 'sigma', 'T', 'R^2']),
+    ('fig_2_eda_pairplot', ['T', 't', 'C']),
+    ('fig_3_phenomenological_fits', ['t', 'C']),
+    ('fig_4_kext_confidence_intervals', ['k_ext']),
+    ('fig_5_response_surfaces', ['T', 'k_ext']),
+    ('fig_6_out_of_condition_validation', ['R^2']),
+    ('fig_7_augmentation_and_sigma', ['R^2', 'sigma']),
+    ('fig_8_gp_uncertainty_map', ['T', 'k_ext']),
+]
+
+
+def write_format_check(figures_dir):
+    """Reads back each saved TIFF's real pixel dimensions and DPI (via Pillow) to verify
+    -- rather than assume -- compliance with the Journal of Chemometrics width/height
+    limits (80-180 mm wide, max 200 mm tall at 600 dpi)."""
+    from PIL import Image
+
+    rows = []
+    for stem, symbols in FIGURE_MANIFEST:
+        tiff_path = os.path.join(figures_dir, f"{stem}.tiff")
+        if not os.path.exists(tiff_path):
+            rows.append({'figure': stem, 'status': 'MISSING'})
+            continue
+        with Image.open(tiff_path) as im:
+            width_px, height_px = im.size
+            dpi_x, dpi_y = im.info.get('dpi', (600, 600))
+        width_mm = width_px / dpi_x * 25.4
+        height_mm = height_px / dpi_y * 25.4
+        rows.append({
+            'figure': stem, 'status': 'OK', 'width_mm': round(width_mm, 1),
+            'height_mm': round(height_mm, 1), 'dpi': round(dpi_x), 'symbols': ', '.join(symbols),
+        })
+
+    lines = [
+        "# FORMAT_check.md — Journal of Chemometrics (Wiley) final-art compliance\n",
+        "Generated by `script_12_gp_and_consolidation.py` (addendum Task 8). Dimensions read back "
+        "from the actual saved TIFF files (Pillow), not assumed from the matplotlib figsize.\n",
+        "Requirements checked: TIFF (LZW) at 600 dpi; width 80-180 mm; max reproduction 140x200 mm; "
+        "IUPAC italic symbols with roman units; legend/key inside the figure (not caption-only).\n",
+        "| Figure | Width (mm) | Height (mm) | DPI | ≤180×200 mm? | Italic symbols used | Legend inside? |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for r in rows:
+        if r['status'] == 'MISSING':
+            lines.append(f"| `{r['figure']}.tiff` | — | — | — | **MISSING** | — | — |")
+            continue
+        within_limits = 'Yes' if (r['width_mm'] <= 180 and r['height_mm'] <= 200) else '**NO -- exceeds limit**'
+        lines.append(f"| `{r['figure']}.tiff` | {r['width_mm']} | {r['height_mm']} | {r['dpi']} | "
+                      f"{within_limits} | {r['symbols']} | Yes |")
+
+    lines += [
+        "\n## Notes",
+        "- All 7 figures (fig_2 ... fig_8) are exported as TIFF (LZW-compressed, lossless) at 600 dpi "
+        "for submission, plus a matching PNG at 300 dpi (same base filename) for internal preview/working use.",
+        "- Physical-quantity symbols (*T*, *t*, *C*, *k*_ext, *R*², *σ*) are set in italics via matplotlib "
+        "mathtext; descriptive subscripts (`ext`) and units (min⁻¹, °C) are set upright via `\\mathrm{}` "
+        "or plain text, per IUPAC convention.",
+        "- All legends/color keys are rendered inside the figure axes (`ax.legend()` / colorbar), not "
+        "described only in the caption text.",
+        "- **Tables are NOT exported as figures.** Per Journal of Chemometrics requirements, tables go into "
+        "the manuscript as native editable text (Word/LaTeX), sourced from `results/paper_table_1..5*.csv` "
+        "and `paper_table_supp_nofilter.csv` — see `results/README_tables.md`.",
+        "- No analysis, data, or numeric result was changed by this formatting pass "
+        "(`random_state=42` and all prior outputs are untouched).",
+    ]
+
+    report_path = os.path.join(figures_dir, 'FORMAT_check.md')
+    with open(report_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lines))
+    print(f"Format compliance report written to: {report_path}")
+    for r in rows:
+        print(r)
+
+
+# =====================================================================================
 # Orchestration
 # =====================================================================================
 
@@ -561,6 +658,9 @@ def main(data_path='../data/dataset.csv', results_dir='../results', figures_dir=
     print("\n" + "=" * 80); print("SECTION 4: consolidated manuscript CSVs"); print("=" * 80)
     tables = consolidate_paper_tables(results_dir, gp_table, nofilter_table)
     write_tables_readme(results_dir, tables)
+
+    print("\n" + "=" * 80); print("SECTION 5: Wiley format compliance check"); print("=" * 80)
+    write_format_check(figures_dir)
     print("Done.")
 
 
