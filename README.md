@@ -11,11 +11,17 @@ analyses. No new laboratory measurements were made — everything here is re-ana
 > ⚠️ **Critical finding (read first):** the Random Forest's R²=0.90-0.94 for k_ext (Table 3) does **not**
 > survive a validation that respects operating-condition identity. Grouped cross-validation collapses R²
 > to negative values for all 4 compounds — condition-identity leakage in the row-wise train/test split,
-> not genuine generalization. This is now the central, deliberately-presented methodological finding of
-> the project (see Fig. 6). See [RESULTADOS_validacion_agrupada.md](RESULTADOS_validacion_agrupada.md),
-> [RESULTADOS_sigma_y_fisica.md](RESULTADOS_sigma_y_fisica.md) for the full diagnostic, and
-> **[RESULTADOS_para_manuscrito.md](RESULTADOS_para_manuscrito.md) for the final, clean figure/table
-> index ready for manuscript writing.**
+> not genuine generalization. Confirmed by two further, independent tests added in the pre-submission
+> review response: **not a single individual validation fold (out of 18, across all compounds) reached a
+> positive R²**, and a 4-parameter structured (Arrhenius) grey-box model fails the same way — it is not
+> an artifact of using a flexible black-box learner. This is the central, deliberately-presented
+> methodological finding of the project (Fig. 5 in the final manuscript numbering). See
+> [RESULTADOS_validacion_agrupada.md](RESULTADOS_validacion_agrupada.md),
+> [RESULTADOS_sigma_y_fisica.md](RESULTADOS_sigma_y_fisica.md),
+> **[RESULTADOS_revision.md](RESULTADOS_revision.md) for the pre-submission review response (latest,
+> authoritative figure/table numbering)**, and
+> [RESULTADOS_para_manuscrito.md](RESULTADOS_para_manuscrito.md) for the earlier figure/table index
+> (numbering superseded by RESULTADOS_revision.md §6).
 
 ## Why the reorientation
 
