@@ -1,0 +1,19 @@
+Compound,held_out_condition_id,held_out_condition,n_test_rows,R2_fold,RMSE_fold
+Anthocyanins,1,"60C, Agua75_ETA25, 1_30",31,-2.7401,0.0114
+Anthocyanins,7,"60C, Agua100, 1_20",27,-23.6414,0.0098
+Anthocyanins,8,"75C, Agua100, 1_20",29,-42.2755,0.073
+Anthocyanins,11,"68C, Agua100, 1_30",31,-4.2292,0.01
+Anthocyanins,12,"68C, Agua100, 1_10",22,-9.1854,0.0104
+Anthocyanins,15,"68C, Agua75_ETA25, 1_20",31,-6.0412,0.0118
+Phenolics,3,"60C, Agua75_ETA25, 1_10",29,-11.5879,0.051
+Phenolics,4,"75C, Agua75_ETA25, 1_10",20,-2.0084,0.0679
+Phenolics,7,"60C, Agua100, 1_20",24,-5302.6927,0.1125
+Phenolics,11,"68C, Agua100, 1_30",31,-170.216,0.0515
+Phenolics,12,"68C, Agua100, 1_10",31,-15.8805,0.07
+Phenolics,13,"68C, Agua75_ETA25, 1_20",28,-1.5279,0.0388
+Phenolics,15,"68C, Agua75_ETA25, 1_20",26,-0.6901,0.0438
+Antioxidant Capacity (ABTS),7,"60C, Agua100, 1_20",29,-224.0505,0.0458
+Antioxidant Capacity (ABTS),11,"68C, Agua100, 1_30",31,-12.1668,0.0214
+Antioxidant Capacity (ABTS),12,"68C, Agua100, 1_10",29,-10.1384,0.0454
+Antioxidant Capacity (DPPH),4,"75C, Agua75_ETA25, 1_10",31,-446.3083,0.1791
+Antioxidant Capacity (DPPH),6,"75C, Agua50_ETA50, 1_20",14,-5.4415,0.1966
