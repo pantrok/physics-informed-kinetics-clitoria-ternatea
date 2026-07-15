@@ -1,0 +1,106 @@
+\documentclass[border=5pt]{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+
+\begin{document}
+
+% ---- Color palette (sober, print-safe) ----
+\definecolor{stageblue}{RGB}{68,114,148}
+\definecolor{stagefill}{RGB}{234,240,245}
+\definecolor{stepfill}{RGB}{252,252,250}
+\definecolor{stepline}{RGB}{120,120,120}
+\definecolor{arrowcol}{RGB}{80,80,80}
+
+\begin{tikzpicture}[
+    font=\sffamily\small,
+    stagetitle/.style={font=\sffamily\bfseries\small, text=stageblue},
+    processstep/.style={
+      rectangle, rounded corners=2pt, draw=stepline, line width=0.6pt,
+      fill=stagefill, text width=52mm, align=center, inner sep=4pt,
+    font=\sffamily\footnotesize, minimum height=7mm},
+    flow/.style={-{Stealth[length=3mm]}, line width=1.1pt, draw=arrowcol, shorten >=2pt, shorten <=2pt},
+    substep/.style={-{Stealth[length=2mm]}, line width=0.5pt, draw=stepline, shorten >=2pt, shorten <=2pt}
+  ]
+
+  % =========================================================
+  % STAGE 1 — top-left
+  % =========================================================
+  \node[stagetitle] (t1) {1.\; Experimental acquisition};
+  \node[processstep, below=2mm of t1] (s1a)
+  {Box--Behnken design\\{\scriptsize($T$, solvent, solid--liquid ratio)}};
+  \node[processstep, below=2.2mm of s1a] (s1b)
+  {UV--Vis determination\\{\scriptsize(triplicate absorbance)}};
+  \node[processstep, below=2.2mm of s1b] (s1c)
+  {Reference concentration--time profiles};
+  \begin{scope}[on background layer]
+    \node[rectangle, rounded corners=3pt, draw=stageblue,
+      line width=1pt, fill=stagefill, fit=(t1)(s1a)(s1b)(s1c),
+    inner sep=5pt] (st1) {};
+  \end{scope}
+
+  % =========================================================
+  % STAGE 2 — top-right
+  % =========================================================
+  \node[stagetitle, right=22mm of t1, yshift=-4.5mm] (t2) {2.\; Grey-box kinetic modeling};
+  \node[processstep, below=2mm of t2] (s2a)
+  {Consecutive Ext--Deg model fit\\{\scriptsize(estimate $k_{\mathrm{ext}}$, $k_{\mathrm{deg}}$)}};
+  \node[processstep, below=2.2mm of s2a] (s2b)
+  {Physical validity filter\\{\scriptsize($R^{2} \geq 0.50$)}};
+  \begin{scope}[on background layer]
+    \node[rectangle, rounded corners=3pt, draw=stageblue, line width=1pt,
+    fill=stagefill, fit=(t2)(s2a)(s2b), inner sep=5pt] (st2) {};
+  \end{scope}
+
+  % =========================================================
+  % STAGE 3 — bottom-left  (aligned under Stage 1)
+  % =========================================================
+  \node[stagetitle] at ($(t1)+(0,-64mm)$) (t3) {3.\; Physics-informed augmentation};
+  \node[processstep, below=2mm of t3] (s3a)
+  {Monte Carlo augmentation\\{\scriptsize(noise level $\sigma$)}};
+  \node[processstep, below=2.2mm of s3a] (s3b)
+  {Phenomenological variance filter\\{\scriptsize($\pm 60\%$ deviation)}};
+  \node[processstep, below=2.2mm of s3b] (s3c)
+  {$k_{\mathrm{ext}}$ with 95\% confidence intervals};
+  \begin{scope}[on background layer]
+    \node[rectangle, rounded corners=3pt, draw=stageblue, line width=1pt,
+    fill=stagefill, fit=(t3)(s3a)(s3b)(s3c), inner sep=5pt] (st3) {};
+  \end{scope}
+
+  % =========================================================
+  % STAGE 4 — bottom-right (aligned under Stage 2)
+  % =========================================================
+  \node[stagetitle] at ($(t1)+(74mm,-64mm)$) (t4) {4.\; Predictive mapping \& validation};
+  \node[processstep, below=2mm of t4] (s4a)
+  {Random forest mapping\\{\scriptsize(operating variables $\rightarrow k_{\mathrm{ext}}$)}};
+  \node[processstep, below=2.2mm of s4a] (s4b)
+  {Out-of-condition (grouped) validation\\{\scriptsize vs.\ in-condition \& baselines}};
+  \node[processstep, below=2.2mm of s4b] (s4c)
+  {Gaussian process uncertainty map};
+  \begin{scope}[on background layer]
+    \node[rectangle, rounded corners=3pt, draw=stageblue, line width=1pt,
+    fill=stagefill, fit=(t4)(s4a)(s4b)(s4c), inner sep=5pt] (st4) {};
+  \end{scope}
+
+  % =========================================================
+  % Main flow arrows: 1 -> 2 -> 3 -> 4  (S-shaped path)
+  % =========================================================
+  % 1 -> 2  (left to right, top row)
+  \draw[flow] (st1.east) -- (st2.west);
+  % 2 -> 3  (top-right down to bottom-left, via routed path)
+  \draw[flow, rounded corners=4pt] (st2.south) -- ++(0,-18mm) -- ($(st3.north)+(0,10mm)$) -- (st3.north);
+  % 3 -> 4  (left to right, bottom row)
+  \draw[flow] (st3.east) -- (st4.west);
+
+  % Internal sub-step arrows
+  \draw[substep] (s1a.south) -- (s1b.north);
+  \draw[substep] (s1b.south) -- (s1c.north);
+  \draw[substep] (s2a.south) -- (s2b.north);
+  \draw[substep] (s3a.south) -- (s3b.north);
+  \draw[substep] (s3b.south) -- (s3c.north);
+  \draw[substep] (s4a.south) -- (s4b.north);
+  \draw[substep] (s4b.south) -- (s4c.north);
+
+\end{tikzpicture}
+
+\end{document}
