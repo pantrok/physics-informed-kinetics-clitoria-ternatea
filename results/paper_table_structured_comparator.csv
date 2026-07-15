@@ -1,0 +1,5 @@
+Compound,n_conditions,R2_arrhenius_LOGO,R2_RF_LOGO,R2_GP_LOGO,RMSE_arrhenius,notes
+Anthocyanins,6,-0.6532,-0.5799,,0.0304,"GP not evaluated for this compound (Phenolics-only scope, Task 7)"
+Phenolics,7,-1.2851,-0.4226,0.0277,0.0855,
+Antioxidant Capacity (ABTS),3,,-1.0544,,,"Not estimable: n_valid=3 <= 5 (need >1 spare condition for LOGO); GP not evaluated for this compound (Phenolics-only scope, Task 7)"
+Antioxidant Capacity (DPPH),2,,-2.8248,,,"Not estimable: n_valid=2 <= 5 (need >1 spare condition for LOGO); GP not evaluated for this compound (Phenolics-only scope, Task 7)"
