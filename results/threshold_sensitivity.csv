@@ -1,0 +1,13 @@
+Compound,threshold,n_valid,R2_grouped_LOGO,RMSE_grouped_LOGO,note
+Anthocyanins,0.4,7,-1.5274,0.0408,
+Anthocyanins,0.5,6,-0.5799,0.0316,
+Anthocyanins,0.6,6,-0.5799,0.0316,
+Phenolics,0.4,8,-0.287,0.0581,
+Phenolics,0.5,7,-0.4226,0.065,
+Phenolics,0.6,5,-0.28,0.0543,
+Antioxidant Capacity (ABTS),0.4,4,-2.1501,0.0447,
+Antioxidant Capacity (ABTS),0.5,3,-1.0544,0.0389,
+Antioxidant Capacity (ABTS),0.6,3,-1.0544,0.0389,
+Antioxidant Capacity (DPPH),0.4,2,-2.8248,0.1847,
+Antioxidant Capacity (DPPH),0.5,2,-2.8248,0.1847,
+Antioxidant Capacity (DPPH),0.6,2,-2.8248,0.1847,
